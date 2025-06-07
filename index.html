@@ -1,39 +1,89 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>OTP Verification</title>
   <style>
-    body { font-family: sans-serif; text-align: center; margin-top: 50px; }
-    .hidden { display: none; }
-    button, input { padding: 8px; margin-top: 10px; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: url('https://images.unsplash.com/photo-1605902711622-cfb43c4437d1?auto=format&fit=crop&w=1470&q=80') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 40px;
+      text-align: center;
+      color: #fff;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      width: 300px;
+    }
+
+    input {
+      padding: 10px;
+      width: 100%;
+      margin-top: 20px;
+      font-size: 1.1em;
+      border-radius: 8px;
+      border: none;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1em;
+      border: none;
+      border-radius: 8px;
+      background-color: #00b894;
+      color: white;
+      cursor: pointer;
+    }
+
+    #statusMsg {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    .hidden {
+      display: none;
+    }
   </style>
 </head>
 <body>
 
-  <div id="otpSection">
-    <h2>Enter OTP</h2>
+  <div class="container" id="otpSection">
+    <h2>OTP Verification</h2>
+    <p>Please enter the 6-digit OTP sent to your registered mobile number.</p>
     <input type="text" id="otpInput" placeholder="Enter OTP" maxlength="6" />
-    <br/>
     <button onclick="validateOTP()">Submit</button>
     <p id="statusMsg"></p>
   </div>
 
-  <div id="consentSection" class="hidden">
-    <h3>Consent Required</h3>
+  <div class="container hidden" id="consentSection">
+    <h3>Consent Request</h3>
     <p>Do you allow your Relationship Manager to continue the application on your behalf?</p>
     <button onclick="submitConsent()">Yes, I Allow</button>
   </div>
 
-  <div id="finalMessage" class="hidden">
-    <h3>Thank you</h3>
-    <p>You may now disconnect. RM will continue.</p>
+  <div class="container hidden" id="finalMessage">
+    <h3>Thank you!</h3>
+    <p>Your Relationship Manager will now take over.</p>
   </div>
 
   <script>
-    const HARDCODED_OTP = "123456";
-    const socket = new WebSocket("ws://localhost:3000");
+    const socket = new WebSocket("ws://localhost:3000"); // Update for deployed version
 
-    socket.onopen = () => console.log("WebSocket connected");
+    const HARDCODED_OTP = "123456";
+
+    socket.onopen = () => console.log("✅ WebSocket connected (Customer)");
     socket.onerror = err => console.error("WebSocket error", err);
 
     function validateOTP() {
@@ -46,12 +96,12 @@
         document.getElementById("consentSection").classList.remove("hidden");
       } else {
         status.innerText = "❌ Invalid OTP";
+        status.style.color = "yellow";
       }
     }
 
     function submitConsent() {
       socket.send(JSON.stringify({ type: "CONSENT_GIVEN", user: "customer123" }));
-
       document.getElementById("consentSection").classList.add("hidden");
       document.getElementById("finalMessage").classList.remove("hidden");
     }
