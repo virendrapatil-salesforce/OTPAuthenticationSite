@@ -1,0 +1,38 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>OTP Verification</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; margin-top: 50px; }
+    input { padding: 8px; font-size: 1em; }
+    button { padding: 8px 16px; font-size: 1em; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <h2>Enter OTP</h2>
+  <input type="text" id="otpInput" placeholder="Enter OTP" maxlength="6" />
+  <button onclick="validateOTP()">Submit</button>
+  <p id="statusMsg"></p>
+
+  <script>
+    const HARDCODED_OTP = "123456";
+
+    function validateOTP() {
+      const input = document.getElementById("otpInput").value;
+      const status = document.getElementById("statusMsg");
+
+      if (input === HARDCODED_OTP) {
+        status.innerText = "✅ OTP Verified!";
+        status.style.color = "green";
+      } else {
+        status.innerText = "❌ Invalid OTP.";
+        status.style.color = "red";
+      }
+    }
+  </script>
+</body>
+</html>
